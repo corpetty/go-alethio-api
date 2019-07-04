@@ -3,10 +3,10 @@ package alethio
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"path"
 )
 
@@ -29,6 +29,7 @@ func NewClient(httpClient *http.Client) *Client {
 	}
 	baseURL, _ := url.Parse(defaultBaseURL)
 	c := &Client{httpClient: httpClient, BaseURL: baseURL}
+
 	// c.ChatService = &ChatService{client: c}
 	// c.ChannelService = &ChannelService{client: c}
 	// c.UserService = &UserService{client: c}
@@ -56,6 +57,7 @@ func (c *Client) newRequest(method, addedPath string, body interface{}) (*http.R
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
+	req.Header.Add("Authorization", "Basic "+os.Getenv("ALETHIO_APIKEY"))
 	return req, nil
 }
 
@@ -67,72 +69,4 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 	defer resp.Body.Close()
 	err = json.NewDecoder(resp.Body).Decode(v)
 	return resp, err
-}
-
-// Account is the return Account structure
-type Account struct {
-	Data struct {
-		Type       string `json:"type"`
-		ID         string `json:"id"`
-		Attributes struct {
-			Address string `json:"address"`
-			Nonce   int    `json:"nonce"`
-			Balance string `json:"balance"`
-		} `json:"attributes"`
-		Relationships struct {
-			Contract struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"contract"`
-			Transactions struct {
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"transactions"`
-			ContractMessages struct {
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"contractMessages"`
-			EtherTransfers struct {
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"etherTransfers"`
-			TokenTransfers struct {
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"tokenTransfers"`
-		} `json:"relationships"`
-		Links struct {
-			Self string `json:"self"`
-		} `json:"links"`
-	} `json:"data"`
-	Meta struct {
-		LatestBlock struct {
-			Number            int    `json:"number"`
-			BlockCreationTime int    `json:"blockCreationTime"`
-			BlockHash         string `json:"blockHash"`
-		} `json:"latestBlock"`
-	} `json:"meta"`
-}
-
-// GetAccount will return an ethereum account
-// https://api.aleth.io/v1/docs#tag/Accounts/paths/~1accounts~1{address}/get
-func (c *Client) GetAccount(address string) (Account, error) {
-	req, err := c.newRequest("GET", "/accounts/"+address, nil)
-	if err != nil {
-		fmt.Print(err)
-		var emptyAccount Account
-		return emptyAccount, err
-	}
-	var account Account
-	_, err = c.do(req, &account)
-	return account, err
 }
