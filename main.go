@@ -8,14 +8,14 @@ import (
 )
 
 func main() {
-	var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
-	client := alethio.NewClient(nil)
+	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
+	// client := alethio.NewClient(nil)
 
-	accountDetails, err := client.GetAccountDetails(address)
-	if err != nil {
-		fmt.Print(err)
-	}
-	fmt.Println(accountDetails)
+	// accountDetails, err := client.GetAccountDetails(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// fmt.Println(accountDetails)
 
 	// var contract = "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"
 	// client2 := alethio.NewClient(nil)
@@ -71,11 +71,51 @@ func main() {
 	// }
 	// spew.Dump(block)
 
+	// client2 := alethio.NewClient(nil)
+	// var blockhash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
+	// account, err := client2.GetBlockBeneficiary(blockhash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(account)
+
+	// client2 := alethio.NewClient(nil)
+	// var blockHash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
+	// accountTransactions, err := client2.GetBlockTransactions(blockHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(accountTransactions)
+
+	// client2 := alethio.NewClient(nil)
+	// var blockHash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
+	// contractMessages, err := client2.GetBlockContractMessages(blockHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(contractMessages)
+
+	// client2 := alethio.NewClient(nil)
+	// var blockHash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
+	// logEntries, err := client2.GetBlockLogEntries(blockHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(logEntries)
+
+	// client2 := alethio.NewClient(nil)
+	// var blockHash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
+	// etherTransfers, err := client2.GetBlockEtherTransfers(blockHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(etherTransfers)
+
 	client2 := alethio.NewClient(nil)
-	var blockhash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
-	account, err := client2.GetBlockBeneficiary(blockhash)
+	var blockHash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
+	tokenTransfers, err := client2.GetBlockTokenTransfers(blockHash)
 	if err != nil {
 		fmt.Print(err)
 	}
-	spew.Dump(account)
+	spew.Dump(tokenTransfers)
 }

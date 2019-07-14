@@ -139,6 +139,7 @@ type Contract struct {
 	} `json:"meta"`
 }
 
+// Transactions - structure for a single transaction
 type Transactions struct {
 	Data []struct {
 		Type       string `json:"type"`
@@ -273,6 +274,8 @@ func (c *Client) GetAccountContract(address string) (Contract, error) {
 	return contract, err
 }
 
+// GetAccountTransactions will return the Transactions of a given Account
+// https://api.aleth.io/v1/docs#tag/Accounts/paths/~1accounts~1{address}~1transactions/get
 func (c *Client) GetAccountTransactions(address string) (Transactions, error) {
 	req, err := c.newRequest("GET", "accounts/"+address+"/transactions", nil)
 	if err != nil {
