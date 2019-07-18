@@ -58,87 +58,6 @@ type Account struct {
 	} `json:"meta"`
 }
 
-// Contract is the Contract struct
-type Contract struct {
-	Data struct {
-		Type       string `json:"type"`
-		ID         string `json:"id"`
-		Attributes struct {
-			Address            string   `json:"address"`
-			Balance            string   `json:"balance"`
-			Bytecode           string   `json:"bytecode"`
-			ConstructorArgs    []string `json:"constructorArgs"`
-			CreatedAtTimestamp int      `json:"createdAtTimestamp"`
-		} `json:"attributes"`
-		Relationships struct {
-			Account struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"account"`
-			ContractMessages struct {
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"contractMessages"`
-			CreatedAtBlock struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"createdAtBlock"`
-			CreatedAtContractMessage struct {
-				Data interface{} `json:"data"`
-			} `json:"createdAtContractMessage"`
-			CreatedAtTransaction struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"createdAtTransaction"`
-			LogEntries struct {
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"logEntries"`
-			Token struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"token"`
-			Transactions struct {
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"transactions"`
-		} `json:"relationships"`
-		Links struct {
-			Self string `json:"self"`
-		} `json:"links"`
-	} `json:"data"`
-	Meta struct {
-		LatestBlock struct {
-			Number            int    `json:"number"`
-			BlockCreationTime int    `json:"blockCreationTime"`
-			BlockHash         string `json:"blockHash"`
-		} `json:"latestBlock"`
-	} `json:"meta"`
-}
-
 // Transactions - structure for a single transaction
 type Transactions struct {
 	Data []struct {
@@ -286,4 +205,46 @@ func (c *Client) GetAccountTransactions(address string) (Transactions, error) {
 	var transactions Transactions
 	_, err = c.do(req, &transactions)
 	return transactions, err
+}
+
+// GetAccountContractMessages will return the ContractMessages of a given Account
+// https://api.aleth.io/v1/docs#tag/Accounts/paths/~1accounts~1{address}~1contractMessages/get
+func (c *Client) GetAccountContractMessages(address string) (ContractMessages, error) {
+	req, err := c.newRequest("GET", "accounts/"+address+"/contractMessages", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyContractMessages ContractMessages
+		return emptyContractMessages, err
+	}
+	var contractMessages ContractMessages
+	_, err = c.do(req, &contractMessages)
+	return contractMessages, err
+}
+
+// GetAccountEtherTransfers will return all Ether transfers of a given Account
+// https://api.aleth.io/v1/docs#tag/Accounts/paths/~1accounts~1{address}~1etherTransfers/get
+func (c *Client) GetAccountEtherTransfers(address string) (EtherTransfers, error) {
+	req, err := c.newRequest("GET", "accounts/"+address+"/etherTransfers", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyEtherTransfers EtherTransfers
+		return emptyEtherTransfers, err
+	}
+	var etherTransfers EtherTransfers
+	_, err = c.do(req, &etherTransfers)
+	return etherTransfers, err
+}
+
+// GetAccountTokenTransfers will return all Token transfers of a given Account
+// https://api.aleth.io/v1/docs#tag/Accounts/paths/~1accounts~1{address}~1tokenTransfers/get
+func (c *Client) GetAccountTokenTransfers(address string) (TokenTransfers, error) {
+	req, err := c.newRequest("GET", "accounts/"+address+"/tokenTransfers", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyTokenTransfers TokenTransfers
+		return emptyTokenTransfers, err
+	}
+	var tokenTransfers TokenTransfers
+	_, err = c.do(req, &tokenTransfers)
+	return tokenTransfers, err
 }
