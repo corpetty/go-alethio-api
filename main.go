@@ -143,11 +143,67 @@ func main() {
 	// }
 	// spew.Dump(tokenTransfers)
 
-	var address = "0xaA3fBFAf03cD50E6a44d27D10eB14333d1C02E52"
+	// var address = "0xaA3fBFAf03cD50E6a44d27D10eB14333d1C02E52"
+	// client := alethio.NewClient(nil)
+	// contractDetails, err := client.GetContractDetails(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(contractDetails)
+
+	// var address = "0xaA3fBFAf03cD50E6a44d27D10eB14333d1C02E52"
+	// client := alethio.NewClient(nil)
+	// contractAccount, err := client.GetContractAccount(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(contractAccount)
+
+	// var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	// client := alethio.NewClient(nil)
+	// block, err := client.GetContractCreationBlock(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(block)
+
+	// var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	// client := alethio.NewClient(nil)
+	// transaction, err := client.GetContractCreationTransaction(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(transaction)
+
+	// var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	// client := alethio.NewClient(nil)
+	// message, err := client.GetContractCreationMessage(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(message)
+
+	// var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	// client := alethio.NewClient(nil)
+	// transactions, err := client.GetContractTransactions(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(transactions)
+
+	// var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	// client := alethio.NewClient(nil)
+	// contractMessages, err := client.GetContractMessages(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(contractMessages)
+
+	var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
 	client := alethio.NewClient(nil)
-	contractDetails, err := client.GetContractDetails(address)
+	logEntries, err := client.GetContractLogEntries(address)
 	if err != nil {
 		fmt.Print(err)
 	}
-	spew.Dump(contractDetails)
+	spew.Dump(logEntries)
 }
