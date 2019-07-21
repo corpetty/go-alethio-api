@@ -199,11 +199,59 @@ func main() {
 	// }
 	// spew.Dump(contractMessages)
 
-	var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	// var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	// client := alethio.NewClient(nil)
+	// logEntries, err := client.GetContractLogEntries(address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(logEntries)
+
+	// var txHash = "0x8daaf1ffc66904e0d86e062c2d3b44d575f41203f9385d7a97d6ba41326b80aa"
+	// client := alethio.NewClient(nil)
+	// transaction, err := client.GetTransactionDetails(txHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(transaction)
+
+	// var txHash = "0x8daaf1ffc66904e0d86e062c2d3b44d575f41203f9385d7a97d6ba41326b80aa"
+	// client := alethio.NewClient(nil)
+	// sender, err := client.GetTransactionSender(txHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(sender)
+
+	// var txHash = "0x8daaf1ffc66904e0d86e062c2d3b44d575f41203f9385d7a97d6ba41326b80aa"
+	// client := alethio.NewClient(nil)
+	// to, err := client.GetTransactionDestination(txHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(to)
+
+	// var txHash = "0x8daaf1ffc66904e0d86e062c2d3b44d575f41203f9385d7a97d6ba41326b80aa"
+	// client := alethio.NewClient(nil)
+	// block, err := client.GetTransactionBlock(txHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(block)
+
+	// var txHash = "0x436fc7d21ed4a0a634f41b50ccb42fca12be7322de5bf9a20c97bdccbb5b2a04"
+	// client := alethio.NewClient(nil)
+	// contracts, err := client.GetTransactionCreatedContracts(txHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(contracts)
+
+	var txHash = "0x436fc7d21ed4a0a634f41b50ccb42fca12be7322de5bf9a20c97bdccbb5b2a04"
 	client := alethio.NewClient(nil)
-	logEntries, err := client.GetContractLogEntries(address)
+	contractMessages, err := client.GetTransactionContractMessages(txHash)
 	if err != nil {
 		fmt.Print(err)
 	}
-	spew.Dump(logEntries)
+	spew.Dump(contractMessages)
 }

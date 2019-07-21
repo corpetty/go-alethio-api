@@ -1,5 +1,7 @@
 package alethio
 
+import "fmt"
+
 // Transaction - structure for an Ethereum Transaction returned by the alethio API
 type Transaction struct {
 	Data struct {
@@ -92,4 +94,88 @@ type Transaction struct {
 			BlockHash         string `json:"blockHash"`
 		} `json:"latestBlock"`
 	} `json:"meta"`
+}
+
+// GetTransactionDetails returns the Transaction details of a given Transaction hash
+// https://api.aleth.io/v1/docs#tag/Transactions/paths/~1transactions~1{txHash}/get
+func (c *Client) GetTransactionDetails(transactionHash string) (Transaction, error) {
+	req, err := c.newRequest("GET", "transactions/"+transactionHash, nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyTransaction Transaction
+		return emptyTransaction, err
+	}
+	var transaction Transaction
+	_, err = c.do(req, &transaction)
+	return transaction, err
+}
+
+// GetTransactionSender returns the sending Account of a given Transaction hash
+// https://api.aleth.io/v1/docs#tag/Transactions/paths/~1transactions~1{txHash}~1from/get
+func (c *Client) GetTransactionSender(transactionHash string) (Account, error) {
+	req, err := c.newRequest("GET", "transactions/"+transactionHash+"/from", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyAccount Account
+		return emptyAccount, err
+	}
+	var account Account
+	_, err = c.do(req, &account)
+	return account, err
+}
+
+// GetTransactionDestination returns the destination Account of a given Transaction hash
+// https://api.aleth.io/v1/docs#tag/Transactions/paths/~1transactions~1{txHash}~1to/get
+func (c *Client) GetTransactionDestination(transactionHash string) (Account, error) {
+	req, err := c.newRequest("GET", "transactions/"+transactionHash+"/to", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyAccount Account
+		return emptyAccount, err
+	}
+	var account Account
+	_, err = c.do(req, &account)
+	return account, err
+}
+
+// GetTransactionBlock returns the Block that a given Transaction hash was included in
+// https://api.aleth.io/v1/docs#tag/Transactions/paths/~1transactions~1{txHash}~1includedInBlock/get
+func (c *Client) GetTransactionBlock(transactionHash string) (GetBlock, error) {
+	req, err := c.newRequest("GET", "transactions/"+transactionHash+"/includedInBlock", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyBlock GetBlock
+		return emptyBlock, err
+	}
+	var block GetBlock
+	_, err = c.do(req, &block)
+	return block, err
+}
+
+// GetTransactionCreatedContracts returns all Contracts created from a given Transaction hash
+// https://api.aleth.io/v1/docs#tag/Transactions/paths/~1transactions~1{txHash}~1createsContracts/get
+func (c *Client) GetTransactionCreatedContracts(transactionHash string) (Contracts, error) {
+	req, err := c.newRequest("GET", "transactions/"+transactionHash+"/createsContracts", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyContracts Contracts
+		return emptyContracts, err
+	}
+	var contracts Contracts
+	_, err = c.do(req, &contracts)
+	return contracts, err
+}
+
+// GetTransactionContractMessages returns all ContractMessages created from a given Transaction hash
+// https://api.aleth.io/v1/docs#tag/Transactions/paths/~1transactions~1{txHash}~1contractMessages/get
+func (c *Client) GetTransactionContractMessages(transactionHash string) (ContractMessages, error) {
+	req, err := c.newRequest("GET", "transactions/"+transactionHash+"/contractMessages", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyContractMessages ContractMessages
+		return emptyContractMessages, err
+	}
+	var contractMessages ContractMessages
+	_, err = c.do(req, &contractMessages)
+	return contractMessages, err
 }
