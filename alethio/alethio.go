@@ -2,6 +2,7 @@ package alethio
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -12,14 +13,26 @@ import (
 
 const (
 	defaultBaseURL = "https://api.aleth.io/v1"
+	userAgent      = "go-alethio"
+
+	mediaTypeV1 = "application/vnd.api+json"
 )
 
-// Client is a basic Client struct
+// Client is the main httpClient to be built on for API calls
 type Client struct {
 	BaseURL   *url.URL
 	UserAgent string
 
-	httpClient *http.Client
+	client *http.Client
+
+	common service // Reuse a single struct instead of allocating one for each service on the heap.
+
+	// Services used for talking to different parts of the Alethio API
+	Account *AccountService
+}
+
+type service struct {
+	client *Client
 }
 
 // NewClient creates a new httpClient and sets Alethio baseUrl
@@ -28,15 +41,19 @@ func NewClient(httpClient *http.Client) *Client {
 		httpClient = http.DefaultClient
 	}
 	baseURL, _ := url.Parse(defaultBaseURL)
-	c := &Client{httpClient: httpClient, BaseURL: baseURL}
+	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent}
+	c.common.client = c
+	c.Account = (*AccountService)(&c.common)
 
-	// c.ChatService = &ChatService{client: c}
-	// c.ChannelService = &ChannelService{client: c}
-	// c.UserService = &UserService{client: c}
 	return c
 }
 
-func (c *Client) newRequest(method, addedPath string, body interface{}) (*http.Request, error) {
+// NewRequest creates an API request. A relative URL can be provided in urlStr,
+// in which case it is resolved relative to the BaseURL of the Client.
+// Relative URLs should always be specified without a preceding slash. If
+// specified, the value pointed to by body is JSON encoded and included as the
+// request body.
+func (c *Client) NewRequest(method, addedPath string, body interface{}) (*http.Request, error) {
 	// Need to account for the 'v1' in the path, so add request path appropriately.
 	u := c.BaseURL
 	u.Path = path.Join(u.Path, addedPath)
@@ -61,9 +78,36 @@ func (c *Client) newRequest(method, addedPath string, body interface{}) (*http.R
 	return req, nil
 }
 
-func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
-	resp, err := c.httpClient.Do(req)
+// Do sends an API request and returns the API response. The API response is
+// JSON decoded and stored in the value pointed to by v, or returned as an
+// error if an API error has occurred. If v implements the io.Writer
+// interface, the raw response body will be written to v, without attempting to
+// first decode it. If rate limit is exceeded and reset time is in the future,
+// Do returns *RateLimitError immediately without making a network API call.
+//
+// The provided ctx must be non-nil. If it is canceled or times out,
+// ctx.Err() will be returned.
+func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
+	req = withContext(ctx, req)
+
+	resp, err := c.client.Do(req)
 	if err != nil {
+		// If we got an error, and the context has been canceled,
+		// the context's error is probably more useful.
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		default:
+		}
+
+		// // If the error type is *url.Error, sanitize its URL before returning.
+		// if e, ok := err.(*url.Error); ok {
+		// 	if url, err := url.Parse(e.URL); err == nil {
+		// 		e.URL = sanitizeURL(url).String()
+		// 		return nil, e
+		// 	}
+		// }
+
 		return nil, err
 	}
 	defer resp.Body.Close()

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/corpetty/go-alethio-api/alethio"
@@ -11,29 +12,53 @@ func main() {
 	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
 	// client := alethio.NewClient(nil)
 
-	// accountDetails, err := client.GetAccountDetails(address)
+	// accountDetails, err := client.Account.GetDetails(context.Background(), address)
 	// if err != nil {
 	// 	fmt.Print(err)
 	// }
-	// fmt.Println(accountDetails)
+	// spew.Dump(accountDetails)
 
 	// var contract = "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"
-	// client2 := alethio.NewClient(nil)
-	// contractDetails, err := client2.GetAccountContract(contract)
+	// client := alethio.NewClient(nil)
+	// contractDetails, err := client.Account.GetContract(context.Background(), contract)
 	// if err != nil {
 	// 	fmt.Print(err)
 	// }
-	// fmt.Println(contractDetails)
+	// spew.Dump(contractDetails)
 
-	// client2 := alethio.NewClient(nil)
-	// accountTransactions, err := client2.GetAccountTransactions(address)
+	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
+	// client := alethio.NewClient(nil)
+	// accountTransactions, err := client.Account.GetTransactions(context.Background(), address)
 	// if err != nil {
 	// 	fmt.Print(err)
 	// }
-	// fmt.Println(accountTransactions)
+	// spew.Dump(accountTransactions)
 
-	// client2 := alethio.NewClient(nil)
-	// blocks, err := client2.GetAllBlocks()
+	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
+	// client := alethio.NewClient(nil)
+	// contractMessages, err := client.Account.GetContractMessages(context.Background(), address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(contractMessages)
+
+	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
+	// client := alethio.NewClient(nil)
+	// etherTransfers, err := client.Account.GetEtherTransfers(context.Background(), address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(etherTransfers)
+
+	var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
+	client := alethio.NewClient(nil)
+	tokenTransfers, err := client.Account.GetTokenTransfers(context.Background(), address)
+	if err != nil {
+		fmt.Print(err)
+	}
+	spew.Dump(tokenTransfers)
+
+	// blocks, err := client.Blocks.GetAllBlocks()
 	// if err != nil {
 	// 	fmt.Print(err)
 	// }
@@ -114,30 +139,6 @@ func main() {
 	// client2 := alethio.NewClient(nil)
 	// var blockHash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
 	// tokenTransfers, err := client2.GetBlockTokenTransfers(blockHash)
-	// if err != nil {
-	// 	fmt.Print(err)
-	// }
-	// spew.Dump(tokenTransfers)
-
-	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
-	// client := alethio.NewClient(nil)
-	// contractMessages, err := client.GetAccountContractMessages(address)
-	// if err != nil {
-	// 	fmt.Print(err)
-	// }
-	// spew.Dump(contractMessages)
-
-	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
-	// client := alethio.NewClient(nil)
-	// etherTransfers, err := client.GetAccountEtherTransfers(address)
-	// if err != nil {
-	// 	fmt.Print(err)
-	// }
-	// spew.Dump(etherTransfers)
-
-	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
-	// client := alethio.NewClient(nil)
-	// tokenTransfers, err := client.GetAccountTokenTransfers(address)
 	// if err != nil {
 	// 	fmt.Print(err)
 	// }
@@ -247,11 +248,19 @@ func main() {
 	// }
 	// spew.Dump(contracts)
 
-	var txHash = "0x436fc7d21ed4a0a634f41b50ccb42fca12be7322de5bf9a20c97bdccbb5b2a04"
-	client := alethio.NewClient(nil)
-	contractMessages, err := client.GetTransactionContractMessages(txHash)
-	if err != nil {
-		fmt.Print(err)
-	}
-	spew.Dump(contractMessages)
+	// var txHash = "0x436fc7d21ed4a0a634f41b50ccb42fca12be7322de5bf9a20c97bdccbb5b2a04"
+	// client := alethio.NewClient(nil)
+	// contractMessages, err := client.GetTransactionContractMessages(txHash)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(contractMessages)
+
+	// var id = "msg:0xb53fdc2d618b5c35da706b399f9201721a74082fdb46ee90e487c82e422a4c8c:4"
+	// client := alethio.NewClient(nil)
+	// contractMessages, err := client.GetContractMessages(id)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(contractMessages)
 }
