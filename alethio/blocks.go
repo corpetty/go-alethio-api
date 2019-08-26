@@ -1,5 +1,12 @@
 package alethio
 
+import (
+	"context"
+	"fmt"
+)
+
+type BlocksService service
+
 // GetAllBlocks - structure when asking for all blocks
 type GetAllBlocks struct {
 	Data  []Block `json:"data"`
@@ -343,158 +350,158 @@ type TokenTransfers struct {
 	} `json:"meta"`
 }
 
-// // GetAllBlocks will return all blocks (paginated) starting from most recently mined
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks/get
-// func (c *Client) GetAllBlocks() (GetAllBlocks, error) {
-// 	req, err := c.newRequest("GET", "/blocks/", nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyBlocks GetAllBlocks
-// 		return emptyBlocks, err
-// 	}
-// 	var blocks GetAllBlocks
-// 	_, err = c.do(req, &blocks)
-// 	return blocks, err
-// }
+// GetAll will return all blocks (paginated) starting from most recently mined
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks/get
+func (s *BlocksService) GetAll(ctx context.Context) (GetAllBlocks, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyBlocks GetAllBlocks
+		return emptyBlocks, err
+	}
+	var blocks GetAllBlocks
+	_, err = s.client.Do(ctx, req, &blocks)
+	return blocks, err
+}
 
-// // GetBlockByHash will return a block given a blockhash
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}/get
-// func (c *Client) GetBlockByHash(blockHash string) (GetBlock, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+blockHash, nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyBlock GetBlock
-// 		return emptyBlock, err
-// 	}
-// 	var block GetBlock
-// 	_, err = c.do(req, &block)
-// 	return block, err
-// }
+// GetByHash will return a block given a blockhash
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}/get
+func (s *BlocksService) GetByHash(ctx context.Context, blockHash string) (GetBlock, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+blockHash, nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyBlock GetBlock
+		return emptyBlock, err
+	}
+	var block GetBlock
+	_, err = s.client.Do(ctx, req, &block)
+	return block, err
+}
 
-// // GetBlockByNumber will return a block given a block number
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{number}/get
-// func (c *Client) GetBlockByNumber(blockNumber int) (GetBlock, error) {
-// 	req, err := c.newRequest("GET", fmt.Sprintf("/blocks/%d", blockNumber), nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyBlock GetBlock
-// 		return emptyBlock, err
-// 	}
-// 	var block GetBlock
-// 	_, err = c.do(req, &block)
-// 	return block, err
-// }
+// GetByNumber will return a block given a block number
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{number}/get
+func (s *BlocksService) GetByNumber(ctx context.Context, blockNumber int) (GetBlock, error) {
+	req, err := s.client.NewRequest("GET", fmt.Sprintf("/blocks/%d", blockNumber), nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyBlock GetBlock
+		return emptyBlock, err
+	}
+	var block GetBlock
+	_, err = s.client.Do(ctx, req, &block)
+	return block, err
+}
 
-// // GetBlockByLabel will return a block given a specific label
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{label}/get
-// func (c *Client) GetBlockByLabel(label string) (GetBlock, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+label, nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyBlock GetBlock
-// 		return emptyBlock, err
-// 	}
-// 	var block GetBlock
-// 	_, err = c.do(req, &block)
-// 	return block, err
-// }
+// GetByLabel will return a block given a specific label
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{label}/get
+func (s *BlocksService) GetByLabel(ctx context.Context, label string) (GetBlock, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+label, nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyBlock GetBlock
+		return emptyBlock, err
+	}
+	var block GetBlock
+	_, err = s.client.Do(ctx, req, &block)
+	return block, err
+}
 
-// // GetBlockParent will return the parent of the blockhash given as input
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1parentBlock/get
-// func (c *Client) GetBlockParent(blockHash string) (GetBlock, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+blockHash+"/parentBlock", nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyBlock GetBlock
-// 		return emptyBlock, err
-// 	}
-// 	var block GetBlock
-// 	_, err = c.do(req, &block)
-// 	return block, err
-// }
+// GetParent will return the parent of the blockhash given as input
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1parentBlock/get
+func (s *BlocksService) GetParent(ctx context.Context, blockHash string) (GetBlock, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+blockHash+"/parentBlock", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyBlock GetBlock
+		return emptyBlock, err
+	}
+	var block GetBlock
+	_, err = s.client.Do(ctx, req, &block)
+	return block, err
+}
 
-// // GetBlockBeneficiary will return a blocks beneficiary account
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1hasBeneficiary/get
-// func (c *Client) GetBlockBeneficiary(blockHash string) (Account, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+blockHash+"/hasBeneficiary", nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyAccount Account
-// 		return emptyAccount, err
-// 	}
-// 	var account Account
-// 	_, err = c.do(req, &account)
-// 	return account, err
-// }
+// GetBeneficiary will return a blocks beneficiary account
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1hasBeneficiary/get
+func (s *BlocksService) GetBeneficiary(ctx context.Context, blockHash string) (Account, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+blockHash+"/hasBeneficiary", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyAccount Account
+		return emptyAccount, err
+	}
+	var account Account
+	_, err = s.client.Do(ctx, req, &account)
+	return account, err
+}
 
-// // GetBlockTransactions will return the transactions list of a given block
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1transactions/get
-// func (c *Client) GetBlockTransactions(blockHash string) (Transactions, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+blockHash+"/transactions", nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyTransactions Transactions
-// 		return emptyTransactions, err
-// 	}
-// 	var transactions Transactions
-// 	_, err = c.do(req, &transactions)
-// 	return transactions, err
-// }
+// GetTransactions will return the transactions list of a given block
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1transactions/get
+func (s *BlocksService) GetTransactions(ctx context.Context, blockHash string) (Transactions, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+blockHash+"/transactions", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyTransactions Transactions
+		return emptyTransactions, err
+	}
+	var transactions Transactions
+	_, err = s.client.Do(ctx, req, &transactions)
+	return transactions, err
+}
 
-// // GetBlockContractMessages will return all contract messages of a given blockHash's block
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1contractMessages/get
-// func (c *Client) GetBlockContractMessages(blockHash string) (ContractMessages, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+blockHash+"/contractMessages", nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyContractMessages ContractMessages
-// 		return emptyContractMessages, err
-// 	}
-// 	var contractMessages ContractMessages
-// 	_, err = c.do(req, &contractMessages)
-// 	return contractMessages, err
-// }
+// GetContractMessages will return all contract messages of a given blockHash's block
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1contractMessages/get
+func (s *BlocksService) GetContractMessages(ctx context.Context, blockHash string) (ContractMessages, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+blockHash+"/contractMessages", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyContractMessages ContractMessages
+		return emptyContractMessages, err
+	}
+	var contractMessages ContractMessages
+	_, err = s.client.Do(ctx, req, &contractMessages)
+	return contractMessages, err
+}
 
-// // GetBlockLogEntries will return all log entires of a given blockHash's block
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1logEntries/get
-// func (c *Client) GetBlockLogEntries(blockHash string) (LogEntries, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+blockHash+"/logEntries", nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyLogEntires LogEntries
-// 		return emptyLogEntires, err
-// 	}
-// 	var logEntries LogEntries
-// 	_, err = c.do(req, &logEntries)
-// 	return logEntries, err
-// }
+// GetLogEntries will return all log entires of a given blockHash's block
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1logEntries/get
+func (s *BlocksService) GetLogEntries(ctx context.Context, blockHash string) (LogEntries, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+blockHash+"/logEntries", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyLogEntires LogEntries
+		return emptyLogEntires, err
+	}
+	var logEntries LogEntries
+	_, err = s.client.Do(ctx, req, &logEntries)
+	return logEntries, err
+}
 
-// // GetBlockEtherTransfers will return all ether transfers of a given blockHash's block
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1etherTransfers/get
-// func (c *Client) GetBlockEtherTransfers(blockHash string) (EtherTransfers, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+blockHash+"/etherTransfers", nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyEtherTransfers EtherTransfers
-// 		return emptyEtherTransfers, err
-// 	}
-// 	var etherTransfers EtherTransfers
-// 	_, err = c.do(req, &etherTransfers)
-// 	return etherTransfers, err
-// }
+// GetEtherTransfers will return all ether transfers of a given blockHash's block
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1etherTransfers/get
+func (s *BlocksService) GetEtherTransfers(ctx context.Context, blockHash string) (EtherTransfers, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+blockHash+"/etherTransfers", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyEtherTransfers EtherTransfers
+		return emptyEtherTransfers, err
+	}
+	var etherTransfers EtherTransfers
+	_, err = s.client.Do(ctx, req, &etherTransfers)
+	return etherTransfers, err
+}
 
-// // GetBlockTokenTransfers will return all token transfers of a given blockHash's block
-// // https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1tokenTransfers/get
-// func (c *Client) GetBlockTokenTransfers(blockHash string) (TokenTransfers, error) {
-// 	req, err := c.newRequest("GET", "/blocks/"+blockHash+"/tokenTransfers", nil)
-// 	if err != nil {
-// 		fmt.Print(err)
-// 		var emptyTokenTransfers TokenTransfers
-// 		return emptyTokenTransfers, err
-// 	}
-// 	var tokenTransfers TokenTransfers
-// 	_, err = c.do(req, &tokenTransfers)
-// 	return tokenTransfers, err
-// }
+// GetTokenTransfers will return all token transfers of a given blockHash's block
+// https://api.aleth.io/v1/docs#tag/Blocks/paths/~1blocks~1{blockHash}~1tokenTransfers/get
+func (s *BlocksService) GetTokenTransfers(ctx context.Context, blockHash string) (TokenTransfers, error) {
+	req, err := s.client.NewRequest("GET", "/blocks/"+blockHash+"/tokenTransfers", nil)
+	if err != nil {
+		fmt.Print(err)
+		var emptyTokenTransfers TokenTransfers
+		return emptyTokenTransfers, err
+	}
+	var tokenTransfers TokenTransfers
+	_, err = s.client.Do(ctx, req, &tokenTransfers)
+	return tokenTransfers, err
+}
 
 // TODO: impliment the blocks?filter[canonical]=[value] endpoint

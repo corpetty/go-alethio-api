@@ -28,7 +28,9 @@ type Client struct {
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
 
 	// Services used for talking to different parts of the Alethio API
-	Account *AccountService
+	Account   *AccountService
+	Blocks    *BlocksService
+	Contracts *ContractsService
 }
 
 type service struct {
@@ -44,6 +46,8 @@ func NewClient(httpClient *http.Client) *Client {
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent}
 	c.common.client = c
 	c.Account = (*AccountService)(&c.common)
+	c.Blocks = (*BlocksService)(&c.common)
+	c.Contracts = (*ContractsService)(&c.common)
 
 	return c
 }
