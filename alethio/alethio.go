@@ -23,6 +23,8 @@ type Client struct {
 	BaseURL   *url.URL
 	UserAgent string
 
+	apiKey string
+
 	client *http.Client
 
 	common service // Reuse a single struct instead of allocating one for each service on the heap.
@@ -42,8 +44,10 @@ func NewClient(httpClient *http.Client) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
+
 	baseURL, _ := url.Parse(defaultBaseURL)
 	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent}
+	c.apiKey = os.Getenv("ALETHIO_APIKEY")
 	c.common.client = c
 	c.Account = (*AccountService)(&c.common)
 	c.Blocks = (*BlocksService)(&c.common)
@@ -78,7 +82,32 @@ func (c *Client) NewRequest(method, addedPath string, body interface{}) (*http.R
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
-	req.Header.Add("Authorization", "Basic "+os.Getenv("ALETHIO_APIKEY"))
+	req.Header.Add("Authorization", "Basic "+c.apiKey)
+	return req, nil
+}
+
+// NewURLRequest creates a HTTP request to an URL. An absolute URL must pe specified.
+// If specified, the value pointed to by body is JSON encoded and included as the
+// request body.
+func (c *Client) NewURLRequest(method, url string, body interface{}) (*http.Request, error) {
+	var buf io.ReadWriter
+	if body != nil {
+		buf = new(bytes.Buffer)
+		err := json.NewEncoder(buf).Encode(body)
+		if err != nil {
+			return nil, err
+		}
+	}
+	req, err := http.NewRequest(method, url, buf)
+	if err != nil {
+		return nil, err
+	}
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("User-Agent", c.UserAgent)
+	req.Header.Add("Authorization", "Basic "+c.apiKey)
 	return req, nil
 }
 
