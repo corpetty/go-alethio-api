@@ -408,6 +408,7 @@ func (s *BlocksService) GetEtherTransfers(ctx context.Context, blockHash string)
 		return emptyEtherTransfers, err
 	}
 	var etherTransfers EtherTransfers
+	etherTransfers.client = s.client
 	_, err = s.client.Do(ctx, req, &etherTransfers)
 	return etherTransfers, err
 }
