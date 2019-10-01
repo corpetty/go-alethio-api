@@ -8,7 +8,6 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"path"
 )
 
@@ -59,7 +58,6 @@ func NewClient(options ...func(*Client) error) (*Client, error) {
 		}
 	}
 
-	c.apiKey = os.Getenv("ALETHIO_APIKEY")
 	c.common.client = &c
 	c.Account = (*AccountService)(&c.common)
 	c.Blocks = (*BlocksService)(&c.common)
@@ -94,7 +92,9 @@ func (c *Client) NewRequest(method, addedPath string, body interface{}) (*http.R
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
-	req.Header.Add("Authorization", "Basic "+c.apiKey)
+	if c.apiKey != "" {
+		req.Header.Add("Authorization", "Bearer "+c.apiKey)
+	}
 	return req, nil
 }
 
@@ -158,32 +158,4 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	defer resp.Body.Close()
 	err = json.NewDecoder(resp.Body).Decode(v)
 	return resp, err
-}
-
-type opts struct {
-}
-
-// URL is used to set the base url for the API
-func (o opts) URL(u string) func(*Client) error {
-	return func(c *Client) error {
-		var err error
-		c.BaseURL, err = url.Parse(u)
-		return err
-	}
-}
-
-// URL is used to set the base url for the API
-func (o opts) UserAgent(ua string) func(*Client) error {
-	return func(c *Client) error {
-		c.UserAgent = ua
-		return nil
-	}
-}
-
-// HTTPClient is used to set a different http client than the default one
-func (o opts) HTTPClient(h *http.Client) func(*Client) error {
-	return func(c *Client) error {
-		c.client = h
-		return nil
-	}
 }
