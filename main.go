@@ -3,20 +3,26 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/corpetty/go-alethio-api/alethio"
 	"github.com/davecgh/go-spew/spew"
 )
 
 func main() {
-	// var address = "0x2942577508e060ea092c0CD7802ae42c1CEA2BAe"
-	// client := alethio.NewClient(nil)
+	var address = "0x3378EeAf39DFFB316A95F31F17910CBb21ace6bB"
+	client, err := alethio.NewClient(
+		alethio.Opts.URL("https://api.goerli.aleth.io/v1"),
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	// accountDetails, err := client.Account.GetDetails(context.Background(), address)
-	// if err != nil {
-	// 	fmt.Print(err)
-	// }
-	// spew.Dump(accountDetails)
+	accountDetails, err := client.Account.GetDetails(context.Background(), address)
+	if err != nil {
+		fmt.Print(err)
+	}
+	spew.Dump(accountDetails)
 
 	// var contract = "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"
 	// client := alethio.NewClient(nil)
@@ -193,13 +199,13 @@ func main() {
 	// }
 	// spew.Dump(transactions)
 
-	var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
-	client := alethio.NewClient(nil)
-	contractMessages, err := client.Contracts.GetMessages(context.Background(), address)
-	if err != nil {
-		fmt.Print(err)
-	}
-	spew.Dump(contractMessages)
+	//var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	//client, err := alethio.NewClient(nil)
+	//contractMessages, err := client.Contracts.GetMessages(context.Background(), address)
+	//if err != nil {
+	//	fmt.Print(err)
+	//}
+	//spew.Dump(contractMessages)
 
 	// var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
 	// client := alethio.NewClient(nil)

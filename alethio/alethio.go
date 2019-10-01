@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -12,11 +13,13 @@ import (
 )
 
 const (
-	defaultBaseURL = "https://api.aleth.io/v1"
-	userAgent      = "go-alethio"
+	defaultBaseURL   = "https://api.aleth.io/v1"
+	defaultUserAgent = "go-alethio"
 
 	mediaTypeV1 = "application/vnd.api+json"
 )
+
+var Opts = opts{}
 
 // Client is the main httpClient to be built on for API calls
 type Client struct {
@@ -39,21 +42,30 @@ type service struct {
 	client *Client
 }
 
-// NewClient creates a new httpClient and sets Alethio baseUrl
-func NewClient(httpClient *http.Client) *Client {
-	if httpClient == nil {
-		httpClient = http.DefaultClient
+// NewClient creates a new Alethio API http client
+func NewClient(options ...func(*Client) error) (*Client, error) {
+	// defaults
+	u, _ := url.Parse(defaultBaseURL)
+	c := Client{
+		client:    http.DefaultClient,
+		BaseURL:   u,
+		UserAgent: defaultUserAgent,
 	}
 
-	baseURL, _ := url.Parse(defaultBaseURL)
-	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent}
+	for _, option := range options {
+		err := option(&c)
+		if err != nil {
+			return nil, fmt.Errorf("apply option: %s", err)
+		}
+	}
+
 	c.apiKey = os.Getenv("ALETHIO_APIKEY")
-	c.common.client = c
+	c.common.client = &c
 	c.Account = (*AccountService)(&c.common)
 	c.Blocks = (*BlocksService)(&c.common)
 	c.Contracts = (*ContractsService)(&c.common)
 
-	return c
+	return &c, nil
 }
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr,
@@ -146,4 +158,32 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	defer resp.Body.Close()
 	err = json.NewDecoder(resp.Body).Decode(v)
 	return resp, err
+}
+
+type opts struct {
+}
+
+// URL is used to set the base url for the API
+func (o opts) URL(u string) func(*Client) error {
+	return func(c *Client) error {
+		var err error
+		c.BaseURL, err = url.Parse(u)
+		return err
+	}
+}
+
+// URL is used to set the base url for the API
+func (o opts) UserAgent(ua string) func(*Client) error {
+	return func(c *Client) error {
+		c.UserAgent = ua
+		return nil
+	}
+}
+
+// HTTPClient is used to set a different http client than the default one
+func (o opts) HTTPClient(h *http.Client) func(*Client) error {
+	return func(c *Client) error {
+		c.client = h
+		return nil
+	}
 }
