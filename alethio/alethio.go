@@ -4,19 +4,21 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"path"
 )
 
 const (
-	defaultBaseURL = "https://api.aleth.io/v1"
-	userAgent      = "go-alethio"
+	defaultBaseURL   = "https://api.aleth.io/v1"
+	defaultUserAgent = "go-alethio"
 
 	mediaTypeV1 = "application/vnd.api+json"
 )
+
+var Opts = opts{}
 
 // Client is the main httpClient to be built on for API calls
 type Client struct {
@@ -39,21 +41,29 @@ type service struct {
 	client *Client
 }
 
-// NewClient creates a new httpClient and sets Alethio baseUrl
-func NewClient(httpClient *http.Client) *Client {
-	if httpClient == nil {
-		httpClient = http.DefaultClient
+// NewClient creates a new Alethio API http client
+func NewClient(options ...func(*Client) error) (*Client, error) {
+	// defaults
+	u, _ := url.Parse(defaultBaseURL)
+	c := Client{
+		client:    http.DefaultClient,
+		BaseURL:   u,
+		UserAgent: defaultUserAgent,
 	}
 
-	baseURL, _ := url.Parse(defaultBaseURL)
-	c := &Client{client: httpClient, BaseURL: baseURL, UserAgent: userAgent}
-	c.apiKey = os.Getenv("ALETHIO_APIKEY")
-	c.common.client = c
+	for _, option := range options {
+		err := option(&c)
+		if err != nil {
+			return nil, fmt.Errorf("apply option: %s", err)
+		}
+	}
+
+	c.common.client = &c
 	c.Account = (*AccountService)(&c.common)
 	c.Blocks = (*BlocksService)(&c.common)
 	c.Contracts = (*ContractsService)(&c.common)
 
-	return c
+	return &c, nil
 }
 
 // NewRequest creates an API request. A relative URL can be provided in urlStr,
@@ -82,7 +92,9 @@ func (c *Client) NewRequest(method, addedPath string, body interface{}) (*http.R
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
-	req.Header.Add("Authorization", "Basic "+c.apiKey)
+	if c.apiKey != "" {
+		req.Header.Add("Authorization", "Bearer "+c.apiKey)
+	}
 	return req, nil
 }
 
