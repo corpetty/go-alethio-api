@@ -2,9 +2,10 @@ package alethio
 
 import "context"
 
+type EtherTransfersService service
+
 // EtherTransfers - ether transfer array structure for the /block/{blockhash}/etherTransfers API endpoint
 type EtherTransfers struct {
-	service
 	Data []struct {
 		Type       string `json:"type"`
 		ID         string `json:"id"`
@@ -74,22 +75,23 @@ type EtherTransfers struct {
 	} `json:"meta"`
 }
 
-func (et EtherTransfers) Next(ctx context.Context) (*EtherTransfers, error) {
-	req, err := et.client.NewURLRequest("GET", et.Links.Next, nil)
+// Get populates ether transfers from a url
+func (s *EtherTransfersService) Get(ctx context.Context, link string) (*EtherTransfers, error) {
+	req, err := s.client.NewURLRequest("GET", link, nil)
 	if err != nil {
 		return nil, err
 	}
 	etherTransfers := new(EtherTransfers)
-	_, err = et.client.Do(ctx, req, &etherTransfers)
+	_, err = s.client.Do(ctx, req, &etherTransfers)
 	return etherTransfers, err
 }
 
-func (et EtherTransfers) Prev(ctx context.Context) (*EtherTransfers, error) {
-	req, err := et.client.NewURLRequest("GET", et.Links.Prev, nil)
-	if err != nil {
-		return nil, err
-	}
-	etherTransfers := new(EtherTransfers)
-	_, err = et.client.Do(ctx, req, &etherTransfers)
-	return etherTransfers, err
+// GetNext will return the next page of ether transfers for a given set of ether transfers
+func (s *EtherTransfersService) GetNext(ctx context.Context, et *EtherTransfers) (*EtherTransfers, error) {
+	return s.Get(ctx, et.Links.Next)
+}
+
+// GetPrev will return the previous page of ether transfers for a given set of ether transfers
+func (s *EtherTransfersService) GetPrev(ctx context.Context, et *EtherTransfers) (*EtherTransfers, error) {
+	return s.Get(ctx, et.Links.Prev)
 }

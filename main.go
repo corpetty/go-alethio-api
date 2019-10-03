@@ -18,11 +18,27 @@ func main() {
 		log.Fatal(err)
 	}
 
-	accountDetails, err := client.Account.GetDetails(context.Background(), address)
+	// accountDetails, err := client.Account.GetDetails(context.Background(), address)
+	// if err != nil {
+	// 	fmt.Print(err)
+	// }
+	// spew.Dump(accountDetails)
+
+	etherTransfers, err := client.Account.GetEtherTransfers(context.Background(), address)
 	if err != nil {
 		fmt.Print(err)
 	}
-	spew.Dump(accountDetails)
+
+	etherTransfers, err = client.EtherTransfers.Get(context.Background(), etherTransfers.Links.Next)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	etherTransfers, err = client.EtherTransfers.GetPrev(context.Background(), etherTransfers)
+	if err != nil {
+		fmt.Print(err)
+	}
+	spew.Dump(etherTransfers)
 
 	// var contract = "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"
 	// client := alethio.NewClient(nil)
