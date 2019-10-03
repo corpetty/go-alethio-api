@@ -119,7 +119,6 @@ func (s *AccountService) GetEtherTransfers(ctx context.Context, address string) 
 		return nil, err
 	}
 	etherTransfers := new(EtherTransfers)
-	etherTransfers.client = s.client
 	_, err = s.client.Do(ctx, req, &etherTransfers)
 	return etherTransfers, err
 }
