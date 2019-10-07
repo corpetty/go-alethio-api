@@ -95,7 +95,7 @@ func (c *Client) NewRequest(method, addedPath string, body interface{}) (*http.R
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
 	if c.apiKey != "" {
-		req.Header.Add("Authorization", "Bearer "+c.apiKey)
+		req.Header.Set("Authorization", "Bearer "+c.apiKey)
 	}
 	return req, nil
 }
@@ -121,7 +121,9 @@ func (c *Client) NewURLRequest(method, url string, body interface{}) (*http.Requ
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
-	req.Header.Add("Authorization", "Basic "+c.apiKey)
+	if c.apiKey != "" {
+		req.Header.Set("Authorization", "Bearer "+c.apiKey)
+	}
 	return req, nil
 }
 
@@ -136,7 +138,6 @@ func (c *Client) NewURLRequest(method, url string, body interface{}) (*http.Requ
 // ctx.Err() will be returned.
 func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*http.Response, error) {
 	req = withContext(ctx, req)
-
 	resp, err := c.client.Do(req)
 	if err != nil {
 		// If we got an error, and the context has been canceled,
