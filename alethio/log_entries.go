@@ -5,9 +5,11 @@ import (
 	"fmt"
 )
 
+// LogEntriesService is the service for logEntires API endpoint
 type LogEntriesService service
 
-type LogEntries struct {
+// GetLogEntries is the struct that details all a group of logEntries
+type GetLogEntries struct {
 	Data struct {
 		Type       string `json:"type"`
 		ID         string `json:"id"`
@@ -81,14 +83,14 @@ type LogEntries struct {
 
 // GetDetails returns the LogEntires of a given LogEntry id
 // https://docs.aleth.io/api#tag/Log-Entries
-func (s *LogEntriesService) GetDetails(ctx context.Context, id string) (LogEntries, error) {
+func (s *LogEntriesService) GetDetails(ctx context.Context, id string) (GetLogEntries, error) {
 	req, err := s.client.NewRequest("GET", "log-entries/"+id, nil)
 	if err != nil {
 		fmt.Print(err)
-		var emptyLogEntries LogEntries
+		var emptyLogEntries GetLogEntries
 		return emptyLogEntries, err
 	}
-	var logEntries LogEntries
+	var logEntries GetLogEntries
 	_, err = s.client.Do(ctx, req, &logEntries)
 	return logEntries, err
 }

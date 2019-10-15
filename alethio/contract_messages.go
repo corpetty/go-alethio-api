@@ -355,14 +355,14 @@ func (s *ContractMessagesService) GetCreatedContracts(ctx context.Context, id st
 
 // GetLogEntries will return an LogEntry array of a given ContractMessage id
 // https://docs.aleth.io/api#tag/Contract-Messages/paths/~1contract-messages~1{id}~1logEntries/get
-func (s *ContractMessagesService) GetLogEntries(ctx context.Context, id string) (LogEntries, error) {
+func (s *ContractMessagesService) GetLogEntries(ctx context.Context, id string) (GetLogEntries, error) {
 	req, err := s.client.NewRequest("GET", "contract-message"+id+"/logEntries", nil)
 	if err != nil {
 		fmt.Print(err)
-		var emptyLogEntries LogEntries
+		var emptyLogEntries GetLogEntries
 		return emptyLogEntries, err
 	}
-	var logEntries LogEntries
+	var logEntries GetLogEntries
 	_, err = s.client.Do(ctx, req, &logEntries)
 	return logEntries, err
 }
