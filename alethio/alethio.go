@@ -36,6 +36,7 @@ type Client struct {
 	Blocks         *BlocksService
 	Contracts      *ContractsService
 	EtherTransfers *EtherTransfersService
+	Transactions   *TransactionsService
 }
 
 type service struct {
@@ -64,6 +65,7 @@ func NewClient(options ...func(*Client) error) (*Client, error) {
 	c.Blocks = (*BlocksService)(&c.common)
 	c.Contracts = (*ContractsService)(&c.common)
 	c.EtherTransfers = (*EtherTransfersService)(&c.common)
+	c.Transactions = (*TransactionsService)(&c.common)
 
 	return &c, nil
 }
