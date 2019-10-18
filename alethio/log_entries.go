@@ -115,7 +115,7 @@ func (s *LogEntriesService) GetDetails(ctx context.Context, id string) (LogEntry
 }
 
 // Get populates log entries from an url
-func (s *LogEntriesService) GetLogEntries(ctx context.Context, link string) (*LogEntries, error) {
+func (s *LogEntriesService) Get(ctx context.Context, link string) (*LogEntries, error) {
 	req, err := s.client.NewURLRequest("GET", link, nil)
 	if err != nil {
 		return nil, err
