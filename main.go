@@ -3,42 +3,41 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/corpetty/go-alethio-api/alethio"
 	"github.com/davecgh/go-spew/spew"
 )
 
 func main() {
-	var address = "0x3378EeAf39DFFB316A95F31F17910CBb21ace6bB"
-	client, err := alethio.NewClient(
-		alethio.Opts.URL("https://api.goerli.aleth.io/v1"),
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	// accountDetails, err := client.Account.GetDetails(context.Background(), address)
-	// if err != nil {
-	// 	fmt.Print(err)
-	// }
-	// spew.Dump(accountDetails)
-
-	etherTransfers, err := client.Account.GetEtherTransfers(context.Background(), address)
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	etherTransfers, err = client.EtherTransfers.Get(context.Background(), etherTransfers.Links.Next)
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	etherTransfers, err = client.EtherTransfers.GetPrev(context.Background(), etherTransfers)
-	if err != nil {
-		fmt.Print(err)
-	}
-	spew.Dump(etherTransfers)
+	//var address = "0x3378EeAf39DFFB316A95F31F17910CBb21ace6bB"
+	//client, err := alethio.NewClient(
+	//	alethio.Opts.URL("https://api.goerli.aleth.io/v1"),
+	//)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//
+	//// accountDetails, err := client.Account.GetDetails(context.Background(), address)
+	//// if err != nil {
+	//// 	fmt.Print(err)
+	//// }
+	//// spew.Dump(accountDetails)
+	//
+	//etherTransfers, err := client.Account.GetEtherTransfers(context.Background(), address)
+	//if err != nil {
+	//	fmt.Print(err)
+	//}
+	//
+	//etherTransfers, err = client.EtherTransfers.Get(context.Background(), etherTransfers.Links.Next)
+	//if err != nil {
+	//	fmt.Print(err)
+	//}
+	//
+	//etherTransfers, err = client.EtherTransfers.GetPrev(context.Background(), etherTransfers)
+	//if err != nil {
+	//	fmt.Print(err)
+	//}
+	//spew.Dump(etherTransfers)
 
 	// var contract = "0xB8c77482e45F1F44dE1745F52C74426C631bDD52"
 	// client := alethio.NewClient(nil)
@@ -143,11 +142,11 @@ func main() {
 	// }
 	// spew.Dump(contractMessages)
 
-	// client2 := alethio.NewClient(nil)
+	// client2, _ := alethio.NewClient()
 	// var blockHash = "0x05245795a1b3ed9486387102539b55f71527f7cbe9afd3918642ed46735c30f0"
 	// logEntries, err := client2.Blocks.GetLogEntries(context.Background(), blockHash)
 	// if err != nil {
-	// 	fmt.Print(err)
+	//	fmt.Print(err)
 	// }
 	// spew.Dump(logEntries)
 
@@ -223,13 +222,13 @@ func main() {
 	//}
 	//spew.Dump(contractMessages)
 
-	// var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
-	// client := alethio.NewClient(nil)
-	// logEntries, err := client.Contracts.GetLogEntries(context.Background(), address)
-	// if err != nil {
-	// 	fmt.Print(err)
-	// }
-	// spew.Dump(logEntries)
+	var address = "0xb8c77482e45f1f44de1745f52c74426c631bdd52"
+	client, _ := alethio.NewClient()
+	logEntries, err := client.Contracts.GetLogEntries(context.Background(), address)
+	if err != nil {
+		fmt.Print(err)
+	}
+	spew.Dump(logEntries)
 
 	// var txHash = "0x8daaf1ffc66904e0d86e062c2d3b44d575f41203f9385d7a97d6ba41326b80aa"
 	// client := alethio.NewClient(nil)
