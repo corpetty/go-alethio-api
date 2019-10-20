@@ -47,96 +47,6 @@ type TokenDetails struct {
 	} `json:"meta"`
 }
 
-type TokenTransfers struct {
-	Data []struct {
-		Type       string `json:"type"`
-		ID         string `json:"id"`
-		Attributes struct {
-			BlockCreationTime int    `json:"blockCreationTime"`
-			Cursor            string `json:"cursor"`
-			Decimals          int    `json:"decimals"`
-			GlobalRank        []int  `json:"globalRank"`
-			Symbol            string `json:"symbol"`
-			Value             string `json:"value"`
-		} `json:"attributes"`
-		Relationships struct {
-			ContractMessage struct {
-				Data interface{} `json:"data"`
-			} `json:"contractMessage"`
-			From struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"from"`
-			LogEntry struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"logEntry"`
-			Originator struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"originator"`
-			To struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"to"`
-			Token struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"token"`
-			Transaction struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"transaction"`
-		} `json:"relationships"`
-		Links struct {
-			Self string `json:"self"`
-		} `json:"links"`
-	} `json:"data"`
-	Links NavLinks `json:"links"`
-	Meta  struct {
-		Count       int `json:"count"`
-		LatestBlock struct {
-			Number            int    `json:"number"`
-			BlockCreationTime int    `json:"blockCreationTime"`
-			BlockHash         string `json:"blockHash"`
-		} `json:"latestBlock"`
-		Page struct {
-			HasNext bool `json:"hasNext"`
-			HasPrev bool `json:"hasPrev"`
-		} `json:"page"`
-	} `json:"meta"`
-}
-
 // GetDetails returns the Token details of a given token contract address
 // https://docs.aleth.io/api#tag/Tokens/paths/~1tokens~1{address}/get
 func (s *TokensService) GetDetails(ctx context.Context, address string) (TokenDetails, error) {
@@ -153,14 +63,14 @@ func (s *TokensService) GetDetails(ctx context.Context, address string) (TokenDe
 
 // GetContract returns the Token details of a given token contract address
 // https://docs.aleth.io/api#tag/Tokens/paths/~1tokens~1{address}~1contract/get
-func (s *TokensService) GetContract(ctx context.Context, address string) (TokenTransfers, error) {
+func (s *TokensService) GetContract(ctx context.Context, address string) (GetTokenTransfers, error) {
 	req, err := s.client.NewRequest("GET", "tokens/"+address+"/transers", nil)
 	if err != nil {
 		fmt.Print(err)
-		var emptyTransfers TokenTransfers
+		var emptyTransfers GetTokenTransfers
 		return emptyTransfers, err
 	}
-	var transfers TokenTransfers
+	var transfers GetTokenTransfers
 	_, err = s.client.Do(ctx, req, &transfers)
 	return transfers, err
 }
