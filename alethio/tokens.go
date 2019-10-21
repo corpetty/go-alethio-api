@@ -63,14 +63,14 @@ func (s *TokensService) GetDetails(ctx context.Context, address string) (TokenDe
 
 // GetContract returns the Token details of a given token contract address
 // https://docs.aleth.io/api#tag/Tokens/paths/~1tokens~1{address}~1contract/get
-func (s *TokensService) GetContract(ctx context.Context, address string) (GetTokenTransfers, error) {
+func (s *TokensService) GetContract(ctx context.Context, address string) (TokenTransfers, error) {
 	req, err := s.client.NewRequest("GET", "tokens/"+address+"/transers", nil)
 	if err != nil {
 		fmt.Print(err)
-		var emptyTransfers GetTokenTransfers
+		var emptyTransfers TokenTransfers
 		return emptyTransfers, err
 	}
-	var transfers GetTokenTransfers
+	var transfers TokenTransfers
 	_, err = s.client.Do(ctx, req, &transfers)
 	return transfers, err
 }

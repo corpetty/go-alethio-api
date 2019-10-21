@@ -39,6 +39,8 @@ type Client struct {
 	Transactions     *TransactionsService
 	ContractMessages *ContractMessagesService
 	LogEntries       *LogEntriesService
+	Tokens           *TokensService
+	TokenTransfers   *TokenTransfersService
 }
 
 type service struct {
@@ -70,6 +72,8 @@ func NewClient(options ...func(*Client) error) (*Client, error) {
 	c.Transactions = (*TransactionsService)(&c.common)
 	c.ContractMessages = (*ContractMessagesService)(&c.common)
 	c.LogEntries = (*LogEntriesService)(&c.common)
+	c.Tokens = (*TokensService)(&c.common)
+	c.TokenTransfers = (*TokenTransfersService)(&c.common)
 
 	return &c, nil
 }

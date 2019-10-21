@@ -99,8 +99,8 @@ type TokenTransfer struct {
 	} `json:"meta"`
 }
 
-// GetTokenTransfers struct holds a TokenTransfer array
-type GetTokenTransfers struct {
+// TokenTransfers - structure for token transfers array for /blocks/{blockHash}/tokenTransfers API endpoint
+type TokenTransfers struct {
 	Data []struct {
 		Type       string `json:"type"`
 		ID         string `json:"id"`
