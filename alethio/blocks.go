@@ -114,36 +114,18 @@ type LogEntries struct {
 		Type       string `json:"type"`
 		ID         string `json:"id"`
 		Attributes struct {
-			Cursor       string `json:"cursor"`
-			EventDecoded struct {
-				Topic0 string `json:"topic0"`
-				Event  string `json:"event"`
-				Inputs []struct {
-					Name    string `json:"name"`
-					Type    string `json:"type"`
-					Indexed bool   `json:"indexed,omitempty"`
-					Value   string `json:"value"`
-				} `json:"inputs"`
-			} `json:"eventDecoded"`
-			EventDecodedError string   `json:"eventDecodedError"`
-			GlobalRank        []int    `json:"globalRank"`
-			HasLogTopics      []string `json:"hasLogTopics"`
-			LogData           string   `json:"logData"`
+			BlockCreationTime int    `json:"blockCreationTime"`
+			Cursor            string `json:"cursor"`
+			Decimals          int    `json:"decimals"`
+			GlobalRank        []int  `json:"globalRank"`
+			Symbol            string `json:"symbol"`
+			Value             string `json:"value"`
 		} `json:"attributes"`
 		Relationships struct {
-			Block struct {
-				Data struct {
-					Type string `json:"type"`
-					ID   string `json:"id"`
-				} `json:"data"`
-				Links struct {
-					Related string `json:"related"`
-				} `json:"links"`
-			} `json:"block"`
 			ContractMessage struct {
 				Data interface{} `json:"data"`
 			} `json:"contractMessage"`
-			LoggedBy struct {
+			From struct {
 				Data struct {
 					Type string `json:"type"`
 					ID   string `json:"id"`
@@ -151,7 +133,43 @@ type LogEntries struct {
 				Links struct {
 					Related string `json:"related"`
 				} `json:"links"`
-			} `json:"loggedBy"`
+			} `json:"from"`
+			LogEntry struct {
+				Data struct {
+					Type string `json:"type"`
+					ID   string `json:"id"`
+				} `json:"data"`
+				Links struct {
+					Related string `json:"related"`
+				} `json:"links"`
+			} `json:"logEntry"`
+			Originator struct {
+				Data struct {
+					Type string `json:"type"`
+					ID   string `json:"id"`
+				} `json:"data"`
+				Links struct {
+					Related string `json:"related"`
+				} `json:"links"`
+			} `json:"originator"`
+			To struct {
+				Data struct {
+					Type string `json:"type"`
+					ID   string `json:"id"`
+				} `json:"data"`
+				Links struct {
+					Related string `json:"related"`
+				} `json:"links"`
+			} `json:"to"`
+			Token struct {
+				Data struct {
+					Type string `json:"type"`
+					ID   string `json:"id"`
+				} `json:"data"`
+				Links struct {
+					Related string `json:"related"`
+				} `json:"links"`
+			} `json:"token"`
 			Transaction struct {
 				Data struct {
 					Type string `json:"type"`
