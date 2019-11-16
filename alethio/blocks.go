@@ -108,8 +108,8 @@ type Block struct {
 	} `json:"links"`
 }
 
-// TokenTransfers - structure for token transfers array for /blocks/{blockHash}/tokenTransfers API endpoint
-type TokenTransfers struct {
+// LogEntries - structure of the /blocks/{blockHash}/logEntries endpoint
+type LogEntries struct {
 	Data []struct {
 		Type       string `json:"type"`
 		ID         string `json:"id"`
